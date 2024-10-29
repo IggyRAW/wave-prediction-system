@@ -1,0 +1,19 @@
+{
+  "project": {
+    "project_name": "波予測AI",
+    "id": 3030
+  },
+  "paths": {
+    "data_path": "./data/wave-data.csv",
+    "encoder_wind_direction_path": "./model/encoder_wind_direction.pkl",
+    "encoder_wave_direction_path": "./model/encoder_wave_direction.pkl",
+    "scaler_path": "./model/scaler.pkl",
+    "wave_height_model_path": "./model/wave_height_model.pkl",
+    "wave_quality_model_path": "./model/wave_quality_model.pkl",
+    "origin_data_path": "./data/data.csv",
+    "wave_data_path": "./data/wave.csv",
+    "model_csv_path": "./data/model.csv",
+    "test_data_path": "./data/test.csv",
+    "wethar_url": "https://www.umitenki.jp/tenki/4401/1hour"
+  }
+}

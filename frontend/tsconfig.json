@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"] // '@' を 'src' ディレクトリにマッピング
+    }
+  },
+  "include": [
+    "src/**/*" // src ディレクトリ内のファイルを含める
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.app.json"
+    }
+  ]
+}
