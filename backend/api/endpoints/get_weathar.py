@@ -214,7 +214,7 @@ def get_weathar_data():
         # 風向
         wind_direction_classname = cols[4].find("span").get("class")[1]
         result = re.search(r"_([^_]+)_png", wind_direction_classname)
-        wind_direction = result.group(1).lower()
+        wind_direction = result.group(1).upper()
 
         # 風
         wind = cols[4].text.strip().replace("m", "")
@@ -222,7 +222,7 @@ def get_weathar_data():
         # 波向
         wave_direction_img = os.path.basename(cols[5].find("img").get("src"))
         result = re.search(r"_([^_]+).png", wave_direction_img)
-        wave_direction = result.group(1)
+        wave_direction = result.group(1).upper()
 
         # 沿岸波浪
         wave = cols[5].text.strip()
