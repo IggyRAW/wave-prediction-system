@@ -69,6 +69,30 @@ const updateWaveQuality = (item: any) => {
   }
 }
 
+const exportToCsv = () => {
+  try {
+    console.log('CSV出力処理開始')
+    // ヘッダーの作成
+    const header = headers.value.map((h) => h.key).join(',')
+    const rows = sea_info_body.value.map((item) => headers.value.map((h) => item[h.key]).join(','))
+    const csvContent = [header, ...rows].join('\n')
+
+    // Blobを使用してCSVファイル出力
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+
+    // ダウンロードリンクを生成
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', 'sea_info.csv')
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 const backToPage = () => {
   router.push('/')
 }
@@ -90,7 +114,8 @@ const backToPage = () => {
           </v-col>
         </v-row>
         <div class="text-right">
-          <v-btn class="return-btn" @click="backToPage"> 戻る </v-btn>
+          <v-btn class="output-csv-btn" variant="tonal" @click="exportToCsv">CSV</v-btn>
+          <v-btn class="return-btn" variant="tonal" @click="backToPage"> 戻る </v-btn>
         </div>
 
         <div class="outer-border">
@@ -147,6 +172,13 @@ const backToPage = () => {
 .v-btn.edit-btn {
   background-color: darkgreen;
   color: aliceblue;
+}
+.v-btn.output-csv-btn {
+  background: #9999cc;
+  font-size: 20px;
+  width: 100px;
+  height: 40px;
+  margin-left: 10px;
 }
 .v-btn.return-btn {
   font-size: 20px;
