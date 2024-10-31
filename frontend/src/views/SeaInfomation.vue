@@ -3,7 +3,6 @@ import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import Header from '@/components/header.vue'
 import * as SeaInfomationApi from '@/api/GetSeaInfomation'
-import { reverseWaveHeightDic, reverseWaveQualityDic } from '@/api/GetSeaInfomation'
 
 // テーブルボディ
 let sea_info_body = ref([])
@@ -52,8 +51,7 @@ const headers = ref([
 const updateWaveHeight = (item: any) => {
   try {
     console.log('波高更新:', item.wave_height)
-    const waveHeight = reverseWaveHeightDic.get(item.wave_height) || 0
-    SeaInfomationApi.postWaveHeight(item.id, waveHeight)
+    SeaInfomationApi.postWaveHeight(item.id, item.wave_height)
   } catch (error) {
     console.log(error)
   }
@@ -62,8 +60,7 @@ const updateWaveHeight = (item: any) => {
 const updateWaveQuality = (item: any) => {
   try {
     console.log('波質更新:', item.wave_quality)
-    const waveQuality = reverseWaveQualityDic.get(item.wave_quality) || 0
-    SeaInfomationApi.postWaveQuality(item.id, waveQuality)
+    SeaInfomationApi.postWaveQuality(item.id, item.wave_quality)
   } catch (error) {
     console.log(error)
   }

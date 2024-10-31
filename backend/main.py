@@ -7,9 +7,9 @@ from apscheduler.triggers.cron import CronTrigger
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 
-from api.endpoints.get_wave_quality import router as get_wave_quality_router
 from api.endpoints.get_weathar import get_weathar_data
 from api.endpoints.get_weathar import router as get_weathar_router
+from api.endpoints.sea_infomation_view import router as get_wave_quality_router
 from config.config_manager import ConfigManager
 from manager.log_manager import initLogger
 
@@ -49,7 +49,7 @@ async def conflict_exception_handler(request, exc: Exception):
 
 
 def main():
-    uvicorn.run(app, host="0.0.0.0", port=config.get_project("id"))
+    uvicorn.run(app, host="127.0.0.1", port=config.get_project("id"))
 
 
 if __name__ == "__main__":

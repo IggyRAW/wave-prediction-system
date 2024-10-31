@@ -204,8 +204,8 @@ def get_weathar_data():
         table = soup.find("table", class_="hour_yohou")
         rows = table.find_all("tr")
 
-        ll = rows[1]
-        cols = ll.find_all("td")
+        tr = rows[1]
+        cols = tr.find_all("td")
         hour = int(cols[0].text.strip())
         now = datetime.now()
         time = now.replace(hour=hour, minute=0, second=0, microsecond=0)
@@ -214,7 +214,7 @@ def get_weathar_data():
         # 風向
         wind_direction_classname = cols[4].find("span").get("class")[1]
         result = re.search(r"_([^_]+)_png", wind_direction_classname)
-        wind_direction = WindDirection[result.group(1)]
+        wind_direction = result.group(1).upper()
 
         # 風
         wind = cols[4].text.strip().replace("m", "")
@@ -222,7 +222,7 @@ def get_weathar_data():
         # 波向
         wave_direction_img = os.path.basename(cols[5].find("img").get("src"))
         result = re.search(r"_([^_]+).png", wave_direction_img)
-        wave_direction = WaveDirection[result.group(1)]
+        wave_direction = result.group(1).upper()
 
         # 沿岸波浪
         wave = cols[5].text.strip()
@@ -254,99 +254,6 @@ def get_weathar_data():
     except Exception as e:
         logger.error(e)
         raise Exception(e)
-
-    # for row in rows:
-    #     # 最初はスルー
-    #     if rows[0] == row:
-    #         continue
-
-    #     cols = row.find_all("td")
-    #     # 時間
-    #     hour = int(cols[0].text.strip())
-    #     now = datetime.now()
-    #     time = now.replace(hour=hour, minute=0, second=0, microsecond=0)
-    #     time = time.strftime("%Y/%m/%d %H:%M")
-
-    #     # 風向
-    #     wind_direction_classname = cols[4].find("span").get("class")[1]
-    #     result = re.search(r"_([^_]+)_png", wind_direction_classname)
-    #     wind_direction = WindDirection[result.group(1)]
-
-    #     # 風
-    #     wind = cols[4].text.strip().replace("m", "")
-
-    #     # 波向
-    #     if len(cols) != 6:
-    #         wave_direction_img = os.path.basename(
-    #             cols[5].find("img").get("src")
-    #         )
-    #         result = re.search(r"_([^_]+).png", wave_direction_img)
-    #         wave_direction = WaveDirection[result.group(1)]
-
-    #         # 沿岸波浪
-    #         wave = cols[5].text.strip()
-    #         pattern = r"([0-9.]+)\s*m\s*.*?([0-9.]+)\s*秒"
-    #         matchs = re.search(pattern, wave)
-    #         if matchs:
-    #             wave_height = matchs.group(1)
-    #             wave_period = matchs.group(2)
-
-    #         # 潮汐
-    #         tide = cols[6].text.strip().replace("㎝", "")
-    #     else:
-    #         # 潮汐
-    #         tide = cols[5].text.strip().replace("㎝", "")
-
-    #     # DBに格納
-    #     sea_infomation = tbl_sea_infomation(
-    #         time=time,
-    #         wind_direction=wind_direction,
-    #         wind=float(wind),
-    #         wave_direction=wave_direction,
-    #         coastal_waves=float(wave_height),
-    #         period=float(wave_period),
-    #         tide=int(tide),
-    #     )
-    #     session.add(sea_infomation)
-    #     session.commit()
-    #     data.append(
-    #         [
-    #             time,
-    #             wind_direction,
-    #             float(wind),
-    #             wave_direction,
-    #             float(wave_height),
-    #             float(wave_period),
-    #             int(tide),
-    #         ]
-    #     )
-    #     wave_data.append([time, 0, 0])
-
-    # # データカラムの設定
-    # conditions_df = pd.DataFrame(data)
-    # conditions_df.columns = [
-    #     "時間",
-    #     "風向",
-    #     "風",
-    #     "波向",
-    #     "沿岸波浪",
-    #     "周期",
-    #     "潮汐",
-    # ]
-
-    # wave_conditions_df = pd.DataFrame(wave_data)
-    # wave_conditions_df.columns = ["時間", "波高", "波質"]
-
-    # # 既存CSVファイルに書き込み
-    # conditions_df.to_csv(ORIGIN_DATA_PATH, mode="a", header=False, index=False)
-    # wave_conditions_df.to_csv(
-    #     WAVE_DATA_PATH, mode="a", header=False, index=False
-    # )
-
-    # # モデル投入用CSVの生成
-    # create_wave_conditions_csv()
-
-    # logger.info("csvを出力しました。")
 
 
 def create_wave_conditions_csv():
