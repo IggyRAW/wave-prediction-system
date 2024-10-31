@@ -2,7 +2,13 @@ from logging import getLogger
 
 from fastapi import APIRouter, HTTPException, Query
 
-from api.schemas.sea_infomation import *
+from api.schemas.sea_infomation import (
+    DirectionsDict,
+    SeaInfomation,
+    WaveHeight,
+    WaveHeightDict,
+    WaveQualityDict,
+)
 from config.config_manager import ConfigManager
 from db.setting import session
 from db.tbl_sea_infomation import tbl_sea_infomation
@@ -25,14 +31,14 @@ def get_sea_infomation_list():
             SeaInfomation(
                 id=info.id,
                 time=info.time,
-                wind_direction=info.wind_direction,
+                wind_direction=DirectionsDict[info.wind_direction],
                 wind=info.wind,
-                wave_direction=info.wave_direction,
+                wave_direction=DirectionsDict[info.wave_direction],
                 coastal_waves=info.coastal_waves,
                 period=info.period,
                 tide=info.tide,
-                wave_height=info.wave_height,
-                wave_quality=info.wave_quality,
+                wave_height=WaveHeightDict.get(info.wave_height, None),
+                wave_quality=WaveQualityDict.get(info.wave_quality, None),
             )
             for info in sea_infomations
         ]
@@ -44,22 +50,19 @@ def get_sea_infomation_list():
 
 
 @router.post("/wave/info/wave_height/{id}")
-def post_wave_height(id: int, waveHeight: int = Query(..., ge=0)):
+def post_wave_height(id: int, waveHeight: WaveHeight):
     """
     波高更新API
     """
     try:
         logger.info(f"波高更新API：{post_wave_height.__name__}")
-        # idとparamの確認
-        if id < 0 or waveHeight < 0:
-            raise ValueError("id or param must be a positive integer.")
         # 波高をDBへ格納
         record = session.query(tbl_sea_infomation).filter_by(id=id).first()
         if record is None:
             raise HTTPException(
                 status_code=404, detail="Sea information not found"
             )
-        record.wave_height = waveHeight
+        record.wave_height = waveHeight.wave_height
         session.commit()
         session.refresh(record)
 

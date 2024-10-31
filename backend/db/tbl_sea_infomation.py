@@ -19,8 +19,8 @@ class tbl_sea_infomation(Base):
     coastal_waves = Column("coastal_waves", Float)
     period = Column("period", Float)
     tide = Column("tide", Integer)
-    wave_height = Column("wave_height", Integer)
-    wave_quality = Column("wave_quality", Integer)
+    wave_height = Column("wave_height", TEXT)
+    wave_quality = Column("wave_quality", TEXT)
 
 
 def main(args):
