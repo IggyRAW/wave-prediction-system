@@ -3,7 +3,6 @@ import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import Header from '@/components/header.vue'
 import * as SeaInfomationApi from '@/api/GetSeaInfomation'
-import { reverseWaveHeightDic, reverseWaveQualityDic } from '@/api/GetSeaInfomation'
 
 // テーブルボディ
 let sea_info_body = ref([])
