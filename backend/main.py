@@ -49,7 +49,7 @@ async def conflict_exception_handler(request, exc: Exception):
 
 
 def main():
-    uvicorn.run(app, host="0.0.0.0", port=config.get_project("id"))
+    uvicorn.run(app, host="127.0.0.1", port=config.get_project("id"))
 
 
 if __name__ == "__main__":
