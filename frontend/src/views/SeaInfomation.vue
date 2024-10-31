@@ -3,7 +3,6 @@ import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import Header from '@/components/header.vue'
 import * as SeaInfomationApi from '@/api/GetSeaInfomation'
-import { reverseWaveHeightDic, reverseWaveQualityDic } from '@/api/GetSeaInfomation'
 
 // テーブルボディ
 let sea_info_body = ref([])
@@ -52,8 +51,7 @@ const headers = ref([
 const updateWaveHeight = (item: any) => {
   try {
     console.log('波高更新:', item.wave_height)
-    const waveHeight = reverseWaveHeightDic.get(item.wave_height) || 0
-    SeaInfomationApi.postWaveHeight(item.id, waveHeight)
+    SeaInfomationApi.postWaveHeight(item.id, item.wave_height)
   } catch (error) {
     console.log(error)
   }
@@ -62,10 +60,31 @@ const updateWaveHeight = (item: any) => {
 const updateWaveQuality = (item: any) => {
   try {
     console.log('波質更新:', item.wave_quality)
-    const waveQuality = reverseWaveQualityDic.get(item.wave_quality) || 0
-    SeaInfomationApi.postWaveQuality(item.id, waveQuality)
+    SeaInfomationApi.postWaveQuality(item.id, item.wave_quality)
   } catch (error) {
     console.log(error)
+  }
+}
+
+const exportToCsv = async () => {
+  try {
+    console.log('CSV出力処理開始')
+    const response = await SeaInfomationApi.getSeaInfomationCSV()
+    console.log(response)
+
+    if (response.status === 200) {
+      const blob = response.data
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = 'sea_infomation.csv'
+      link.click()
+      window.URL.revokeObjectURL(url)
+    } else {
+      console.error('CSVファイルのダウンロードに失敗しました。')
+    }
+  } catch (error) {
+    console.error('エラーが発生しました:', error)
   }
 }
 
@@ -90,7 +109,8 @@ const backToPage = () => {
           </v-col>
         </v-row>
         <div class="text-right">
-          <v-btn class="return-btn" @click="backToPage"> 戻る </v-btn>
+          <v-btn class="output-csv-btn" variant="tonal" @click="exportToCsv">CSV</v-btn>
+          <v-btn class="return-btn" variant="tonal" @click="backToPage"> 戻る </v-btn>
         </div>
 
         <div class="outer-border">
@@ -147,6 +167,13 @@ const backToPage = () => {
 .v-btn.edit-btn {
   background-color: darkgreen;
   color: aliceblue;
+}
+.v-btn.output-csv-btn {
+  background: #9999cc;
+  font-size: 20px;
+  width: 100px;
+  height: 40px;
+  margin-left: 10px;
 }
 .v-btn.return-btn {
   font-size: 20px;
