@@ -46,14 +46,6 @@ export const getSeaInfomationList = async () => {
     .get('/api/sea/info/list/')
     .then((res: AxiosResponse<ApiResponse<GetWaveQualityList['response']>>) => {
       const data = res.data
-      data.forEach((element: any) => {
-        if (element.wave_height) {
-          element.wave_height = waveHeghtDic.get(element.wave_height) || null
-        }
-        if (element.wave_quality) {
-          element.wave_quality = waveQualityDic.get(element.wave_quality) || null
-        }
-      })
       return data
     })
     .catch((err: AxiosError<any>) => {
@@ -65,10 +57,10 @@ export const getSeaInfomationList = async () => {
     })
 }
 
-export const postWaveHeight = async (id: Number, waveHeight: Number) => {
+export const postWaveHeight = async (id: Number, waveHeight: String) => {
   return await axios
-    .post(`/api/wave/info/wave_height/${id}`, null, {
-      params: { waveHeight }
+    .post(`/api/wave/info/wave_height/${id}`, {
+      wave_height: waveHeight
     })
     .then((res) => res)
     .catch((err) => {
@@ -76,10 +68,10 @@ export const postWaveHeight = async (id: Number, waveHeight: Number) => {
     })
 }
 
-export const postWaveQuality = async (id: Number, waveQuality: Number) => {
+export const postWaveQuality = async (id: Number, waveQuality: String) => {
   return await axios
-    .post(`/api/wave/info/wave_quality/${id}`, null, {
-      params: { waveQuality }
+    .post(`/api/wave/info/wave_quality/${id}`, {
+      wave_quality: waveQuality
     })
     .then((res) => res)
     .catch((err) => {

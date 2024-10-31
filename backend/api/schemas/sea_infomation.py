@@ -40,6 +40,10 @@ WaveQualityDict = {
     "terrible": "とても悪い",
 }
 
+# 辞書を反転
+reverseWaveHeightDict = {v: k for k, v in WaveHeightDict.items()}
+reverseWaveQualityDict = {v: k for k, v in WaveQualityDict.items()}
+
 
 class SeaInfomation(BaseModel):
     id: Optional[int] = Field(None, ge=0, description="ID")
@@ -54,5 +58,9 @@ class SeaInfomation(BaseModel):
     wave_quality: Optional[str] = Field(None, description="波質")
 
 
-class WaveHeight(BaseModel):
+class WaveHeightModel(BaseModel):
     wave_height: Optional[str] = Field(None, description="波高")
+
+
+class WaveQualityModel(BaseModel):
+    wave_quality: Optional[str] = Field(None, description="波質")
