@@ -66,27 +66,25 @@ const updateWaveQuality = (item: any) => {
   }
 }
 
-const exportToCsv = () => {
+const exportToCsv = async () => {
   try {
     console.log('CSV出力処理開始')
-    // ヘッダーの作成
-    const header = headers.value.map((h) => h.key).join(',')
-    const rows = sea_info_body.value.map((item) => headers.value.map((h) => item[h.key]).join(','))
-    const csvContent = [header, ...rows].join('\n')
+    const response = await SeaInfomationApi.getSeaInfomationCSV()
+    console.log(response)
 
-    // Blobを使用してCSVファイル出力
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
-    const url = URL.createObjectURL(blob)
-
-    // ダウンロードリンクを生成
-    const link = document.createElement('a')
-    link.href = url
-    link.setAttribute('download', 'sea_info.csv')
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+    if (response.status === 200) {
+      const blob = response.data
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = 'sea_infomation.csv'
+      link.click()
+      window.URL.revokeObjectURL(url)
+    } else {
+      console.error('CSVファイルのダウンロードに失敗しました。')
+    }
   } catch (error) {
-    console.log(error)
+    console.error('エラーが発生しました:', error)
   }
 }
 

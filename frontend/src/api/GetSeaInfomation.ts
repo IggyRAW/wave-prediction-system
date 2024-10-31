@@ -8,19 +8,40 @@ export interface ApiResponse<T> {
   }
 }
 
-export interface GetWaveQualityList {
+export interface GetSeaInfomationList {
   response: {
     requests: Array<Request>
+  }
+}
+
+export interface GetSeaInfomationCSV {
+  response: {
+    requests: any
   }
 }
 
 export const getSeaInfomationList = async () => {
   return await axios
     .get('/api/sea/info/list/')
-    .then((res: AxiosResponse<ApiResponse<GetWaveQualityList['response']>>) => {
+    .then((res: AxiosResponse<ApiResponse<GetSeaInfomationList['response']>>) => {
       const data = res.data
       return data
     })
+    .catch((err: AxiosError<any>) => {
+      const data: any = err.response?.data ?? {
+        status: 'FIELD',
+        message: err.message
+      }
+      return data
+    })
+}
+
+export const getSeaInfomationCSV = async () => {
+  return await axios
+    .get('/api/sea/list/output/csv/', {
+      responseType: 'blob'
+    })
+    .then((res: any) => res)
     .catch((err: AxiosError<any>) => {
       const data: any = err.response?.data ?? {
         status: 'FIELD',

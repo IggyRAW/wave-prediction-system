@@ -1,6 +1,10 @@
+import csv
+import os
+from datetime import datetime
 from logging import getLogger
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException
+from fastapi.responses import FileResponse
 
 from api.schemas.sea_infomation import (
     DirectionsDict,
@@ -22,6 +26,7 @@ config = ConfigManager()
 router = APIRouter()
 
 
+# region 初期遷移API
 @router.get("/sea/info/list/")
 def get_sea_infomation_list():
     """
@@ -52,6 +57,10 @@ def get_sea_infomation_list():
         raise Exception(e)
 
 
+# endregion
+
+
+# region 波高更新API
 @router.post("/wave/info/wave_height/{id}")
 def post_wave_height(id: int, waveHeight: WaveHeightModel):
     """
@@ -78,6 +87,10 @@ def post_wave_height(id: int, waveHeight: WaveHeightModel):
         raise Exception(e)
 
 
+# endregion
+
+
+# region 波質更新API
 @router.post("/wave/info/wave_quality/{id}")
 def post_wave_quality(id: int, waveQuality: WaveQualityModel):
     """
@@ -101,3 +114,68 @@ def post_wave_quality(id: int, waveQuality: WaveQualityModel):
     except Exception as e:
         logger.error(e)
         raise Exception(e)
+
+
+# endregion
+
+
+# region CSV出力API
+@router.get("/sea/list/output/csv/")
+def output_csv():
+    """
+    CSV出力API
+    """
+    try:
+        logger.info(f"CSV出力API{output_csv.__name__}")
+        sea_infomations = session.query(tbl_sea_infomation).all()
+
+        # CSVファイルの作成
+        file_name = (
+            f"sea_information_{datetime.now().strftime('%Y%m%d%H%M%S')}.csv"
+        )
+        file_path = f"/tmp/{file_name}"
+        if not os.path.exists(os.path.dirname(file_path)):
+            os.mkdir(os.path.dirname(file_path))
+
+        with open(file_path, mode="w", newline="", encoding="utf-8") as file:
+            writer = csv.writer(file)
+
+            # ヘッダー行
+            writer.writerow(
+                [
+                    "id",
+                    "time",
+                    "wind_direction",
+                    "wind",
+                    "wave_direction",
+                    "coastal_waves",
+                    "period",
+                    "tide",
+                    "wave_height",
+                    "wave_quality",
+                ]
+            )
+
+            # データ行
+            for info in sea_infomations:
+                writer.writerow(
+                    [
+                        info.id,
+                        info.time,
+                        info.wind_direction,
+                        info.wind,
+                        info.wave_direction,
+                        info.coastal_waves,
+                        info.period,
+                        info.tide,
+                        info.wave_height,
+                        info.wave_quality,
+                    ]
+                )
+        return FileResponse(
+            path=file_path, filename=file_name, media_type="text/csv"
+        )
+
+    except Exception as e:
+        logger.error(e)
+        raise HTTPException(status_code=500, detail=e)
