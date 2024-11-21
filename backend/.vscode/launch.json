@@ -12,18 +12,21 @@
       "console": "integratedTerminal"
     },
     {
-      "name": "テスト",
-      "type": "debugpy",
+      "name": "波予測モデル作成処理実行",
+      "type": "python",
       "request": "launch",
-      "program": "test.py",
-      "console": "integratedTerminal"
+      "program": "${workspaceFolder}/external/predWave/wave_train.py",
+      "console": "integratedTerminal",
+      "args": ["--name", "MyModel", "--data_list", "path/to/data_list.txt"],
+      "justMyCode": true
     },
     {
       "name": "気象情報取得",
       "type": "debugpy",
       "request": "launch",
       "program": "get_wethar.py",
-      "console": "integratedTerminal"
+      "console": "integratedTerminal",
+      "args": ["--name", "test_model", "--data_list", "data/model.csv"]
     },
     {
       "name": "ttt",

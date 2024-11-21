@@ -10,7 +10,7 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from config.config_manager import ConfigManager
 from exceptions.base import LibraryError
 from exceptions.file import FileNotFoundError
-from utils import load_csv
+from external.predWave.utils import load_csv
 
 logger = getLogger(__name__)
 

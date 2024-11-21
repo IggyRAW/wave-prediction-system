@@ -7,18 +7,7 @@ import * as SeaInfomationApi from '@/api/GetSeaInfomation'
 // テーブルボディ
 let sea_info_body = ref([])
 
-const waveHeightOptions = [
-  '',
-  '頭オーバー',
-  '頭',
-  '肩',
-  'ムネ',
-  'ハラ',
-  'コシ',
-  'モモ',
-  '膝',
-  'フラット'
-]
+const waveHeightOptions = ['', '頭オーバー', '頭', '肩', '胸', '腹', '腰', '腿', '膝', 'フラット']
 const waveQualityOptions = ['', 'とても良い', '良い', '悪い', 'とても悪い']
 
 onMounted(() => {
